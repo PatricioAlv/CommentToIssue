@@ -40,6 +40,11 @@
         "command": "commentToIssue.refresh",
         "title": "Refrescar",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "commentToIssue.configureToken",
+        "title": "Configurar Token de GitHub",
+        "category": "Comment → Issue"
       }
     ],
     "viewsContainers": {
