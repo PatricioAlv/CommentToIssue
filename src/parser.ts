@@ -43,33 +43,36 @@ async function scanFile(fileUri: vscode.Uri, pattern: string): Promise<ReportCom
   try {
     const document = await vscode.workspace.openTextDocument(fileUri);
     const text = document.getText();
-    const lines = text.split('\n');
+    // Soportar CRLF y LF correctamente al dividir en líneas
+    const lines = text.split(/\r?\n/);
     
     // Compilar el patrón regex
     const regex = new RegExp(pattern, 'gm');
     
     lines.forEach((line: string, index: number) => {
-      const match = regex.exec(line);
+      // Limpiar posible '\r' residual y usar la línea limpia para el match
+      const cleanLine = line.replace(/\r$/, '');
+      const match = regex.exec(cleanLine);
       if (match) {
         const message = match[1]?.trim() || '';
         const metadataStr = match[2] || '';
         const metadata = parseMetadata(metadataStr);
         
         // Verificar si ya tiene número de issue asignado
-        const issueMatch = line.match(/\[GH-#(\d+)\]/);
+        const issueMatch = cleanLine.match(/\[GH-#(\d+)\]/);
         const issueNumber = issueMatch ? parseInt(issueMatch[1], 10) : undefined;
         
         comments.push({
           file: vscode.workspace.asRelativePath(fileUri),
           line: index + 1,
-          text: line.trim(),
+          text: cleanLine.trim(),
           message,
           metadata,
           issueNumber
         });
       }
       
-      // Resetear lastIndex para búsquedas correctas
+      // Resetear lastIndex para búsquedas correctas (evita efectos del flag 'g')
       regex.lastIndex = 0;
     });
     
