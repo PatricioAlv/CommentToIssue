@@ -1,0 +1,18 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    // Configuración de ejemplo para Comment → Issue
+    "commentToIssue.provider": "github",
+    "commentToIssue.github.owner": "tu-usuario-github",
+    "commentToIssue.github.repo": "tu-repositorio",
+    "commentToIssue.pattern": "//\\s*ERROR:\\s*(.+?)(?:\\[(.+?)\\])?$",
+    
+    // Configuración de TypeScript
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true
+  }
+}

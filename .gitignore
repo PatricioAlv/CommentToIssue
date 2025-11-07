@@ -1,0 +1,6 @@
+node_modules
+out
+dist
+*.vsix
+.vscode-test
+.comment-to-issue.json

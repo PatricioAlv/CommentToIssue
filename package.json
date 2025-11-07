@@ -1,0 +1,147 @@
+{
+  "name": "comment-to-issue",
+  "displayName": "Comment → Issue",
+  "description": "Detecta comentarios en el código y los convierte en issues de GitHub",
+  "version": "0.0.1",
+  "publisher": "tu-nombre",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "commentToIssue.scan",
+        "title": "Scan: Buscar comentarios de error",
+        "category": "Comment → Issue"
+      },
+      {
+        "command": "commentToIssue.createIssue",
+        "title": "Crear Issue en GitHub",
+        "category": "Comment → Issue"
+      },
+      {
+        "command": "commentToIssue.openOnRemote",
+        "title": "Abrir en GitHub",
+        "category": "Comment → Issue"
+      },
+      {
+        "command": "commentToIssue.copyPermalink",
+        "title": "Copiar Permalink",
+        "category": "Comment → Issue"
+      },
+      {
+        "command": "commentToIssue.refresh",
+        "title": "Refrescar",
+        "icon": "$(refresh)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "comment-to-issue",
+          "title": "Comment → Issue",
+          "icon": "$(issues)"
+        }
+      ]
+    },
+    "views": {
+      "comment-to-issue": [
+        {
+          "id": "errorsDetected",
+          "name": "Errores detectados"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "commentToIssue.scan",
+          "when": "view == errorsDetected",
+          "group": "navigation"
+        },
+        {
+          "command": "commentToIssue.refresh",
+          "when": "view == errorsDetected",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "commentToIssue.createIssue",
+          "when": "view == errorsDetected && viewItem == comment",
+          "group": "1_issue@1"
+        },
+        {
+          "command": "commentToIssue.openOnRemote",
+          "when": "view == errorsDetected && viewItem == comment",
+          "group": "2_navigation@1"
+        },
+        {
+          "command": "commentToIssue.copyPermalink",
+          "when": "view == errorsDetected && viewItem == comment",
+          "group": "2_navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Comment → Issue",
+      "properties": {
+        "commentToIssue.provider": {
+          "type": "string",
+          "default": "github",
+          "enum": [
+            "github"
+          ],
+          "description": "Proveedor de issues (por ahora solo GitHub)"
+        },
+        "commentToIssue.github.owner": {
+          "type": "string",
+          "default": "",
+          "description": "Propietario del repositorio de GitHub (usuario u organización)"
+        },
+        "commentToIssue.github.repo": {
+          "type": "string",
+          "default": "",
+          "description": "Nombre del repositorio de GitHub"
+        },
+        "commentToIssue.pattern": {
+          "type": "string",
+          "default": "//\\s*ERROR:\\s*(.+?)(?:\\[(.+?)\\])?$",
+          "description": "Patrón regex para detectar comentarios de error"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2"
+  }
+}
